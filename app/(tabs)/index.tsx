@@ -1,76 +1,34 @@
-import { Pressable, View } from "react-native";
-import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { View, Text, ActivityIndicator } from "react-native";
+import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Text } from "react-native";
-import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
-import { router } from "expo-router";
+import Header from "@/components/Header";
 
-const WelcomeScreen = () => {
+const HomeScreen = () => {
+  const [isPending, setIsPending] = useState(true);
   return (
-    <SafeAreaView
-      className="flex-1"
-      style={{
-        backgroundColor: "#192031",
-      }}
-    >
+    <View className="flex-1 items-center bg-[#F5F7FA] relative">
       <StatusBar style="light" />
-      <View className=" h-full">
-        <View className="w-full px-4 items-center my-16">
-          <Animated.View
-            entering={FadeInDown.duration(200).springify()}
-            className="flex-row justify-center items-center pb-24"
-          >
-            <MaterialCommunityIcons name="airplane" size={24} color="#12B3A8" />
 
-            <Text className="text-[#FFFFFF] text-xl leading-[60px] pl-1">
-              STACKS
-            </Text>
-            <Text className="text-[#4AE8DD] text-xl leading-[60px] pl-1 italic">
-              FLY
-            </Text>
-          </Animated.View>
-
-          <Animated.View
-            entering={FadeInDown.duration(200).delay(200).springify()}
-          >
-            <Text className="text-[#FFFFFF] text-[52px] font-medium leading-[60px]">
-              Discover your Dream Flight Easily
-            </Text>
-          </Animated.View>
-
-          <Animated.View
-            entering={FadeInDown.duration(200).delay(400).springify()}
-            className="mt-4"
-          >
-            <Text className="text-neutral-300 text-lg leading-[30px]">
-              find an easy way to buy airline tickets with just a few clicks in
-              the aplications.
-            </Text>
-          </Animated.View>
-
-          <Animated.View
-            entering={FadeInDown.duration(200).delay(600).springify()}
-            className="h-1/4 w-full justify-start pt-8 px-4"
-          >
-            <Pressable onPress={()=>router.push("/(tabs)")} className="bg-[#12B3A8] rounded-lg justify-center items-center py-4 ">
-              <Text className="text-white font-bold text-lg">Discover</Text>
-            </Pressable>
-          </Animated.View>
-
-          <View className="flex-row mt-4 w-full justify-center gap-2">
-            <Text className="text-neutral-300 text-medium leading-[38px] text-center">
-              Don't have an account?
-            </Text>
-            <Text className="text-neutral-300 text-semibold leading-[38px] text-center">
-              Register
-            </Text>
+      {isPending && (
+        <View className="absolute z-50 w-full h-full justify-center items-center">
+          <View className="bg-[#000000] bg-opacity-50 h-full w-full justify-center items-center opacity-[0.45] "></View>
+          <View>
+            <ActivityIndicator size="large" color="#fff" />
           </View>
         </View>
+      )}
+
+      {/* Header */}
+      <View
+        className="h-64 mb-4 justify-start border-orange-600 w-full bg-[#192031] relative pt-16"
+        style={{ borderBottomLeftRadius: 30, borderBottomRightRadius: 30 }}
+      >
+        <Header />
       </View>
-    </SafeAreaView>
+
+      {/* Form Area */}
+    </View>
   );
 };
 
-export default WelcomeScreen;
+export default HomeScreen;
