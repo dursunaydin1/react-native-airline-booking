@@ -151,7 +151,7 @@ const DepartureDate = ({
     onPress={onPress}
     className="border-2 border-gray-300 mx-4 mb-4 rounded-2xl justify-center py-4 flex-row items-center pl-4 "
   >
-    <View className="w-[15%] borrder-r-2 border-gray-300">{icon}</View>
+    <View className="w-[15%] border-r-2 border-gray-300">{icon}</View>
     <View className="w-[85%] px-4 items-start justify-start">
       <Text className="bg-transparent text-gray-600 font-bold">
         {value || placeholder}
@@ -203,57 +203,60 @@ export default function HomeScreen() {
 
       {/* Form Area */}
       <View className="w-full px-4 -mt-32 mx-4">
-        <View className="bg-white rounded-3xl pt-2 pb-4 shadow-md shadow-gray-300">
+        <View className="bg-white rounded-3xl pt-2 pb-4 shadow-md shadow-slate-300">
           <View className="flex-row justify-between w-full px-4 py-2">
             <TripOption
               pageNavigation={pageNavigation}
               handleNavigationChange={handleNavigationChange}
             />
           </View>
-        </View>
 
-        {/* Origin City */}
-        <LocationInput
-          placeholder={
-            searchFlightData.originCity
-              ? searchFlightData.originCity
-              : "Departure City"
-          }
-          icon={<FontAwesome5 size={20} color="gray" name="plane-departure" />}
-          value={searchFlightData.originCity}
-          onPress={() => {}}
-        />
-        {/* Destination City */}
-        <LocationInput
-          placeholder={
-            searchFlightData.originCity
-              ? searchFlightData.originCity
-              : "Destination City"
-          }
-          icon={<FontAwesome5 size={20} color="gray" name="plane-arrival" />}
-          value={searchFlightData.originCity}
-          onPress={() => {}}
-        />
-        {/* Departure Date */}
-        <DepartureDate
-          placeholder={
-            selectedDate && selectedDate.lenght > 0
-              ? selectedDate.replace(/^"|"$|"/g, "")
-              : "Departure Date"
-          }
-          icon={<FontAwesome5 size={20} color="gray" name="calendar-alt" />}
-          value={searchFlightData.departureDate.replace(/^"|"$|"/g, "")}
-          onPress={() => {}}
-        />
+          {/* Origin City */}
+          <LocationInput
+            placeholder={
+              searchFlightData.originCity
+                ? searchFlightData.originCity
+                : "Departure City"
+            }
+            icon={
+              <FontAwesome5 size={20} color="gray" name="plane-departure" />
+            }
+            value={searchFlightData.originCity}
+            onPress={() => {}}
+          />
+          {/* Destination City */}
+          <LocationInput
+            placeholder={
+              searchFlightData.destinationCity
+                ? searchFlightData.destinationCity
+                : "Destination City"
+            }
+            icon={<FontAwesome5 size={20} color="gray" name="plane-arrival" />}
+            value={searchFlightData.destinationCity}
+            onPress={() => {}}
+          />
+          {/* Departure Date */}
+          <DepartureDate
+            placeholder={
+              selectedDate && selectedDate.length > 0
+                ? selectedDate.replace(/^"|"$|"/g, "")
+                : "Departure Date"
+            }
+            icon={<FontAwesome5 size={20} color="gray" name="calendar-alt" />}
+            value={searchFlightData.departureDate.replace(/^"|"$|"/g, "")}
+            onPress={() => {}}
+          />
 
-        {/* Seat */}
-        <View className="border-2 border-gray-300 mx-4 rounded-2xl py-3 justify-center flex-row items-center pl-4">
-          <View>
-            <MaterialCommunityIcons
-              name="seat-passenger"
-              size={20}
-              color="gray"
-            />
+          {/* Seat */}
+          <View className="border-2 border-gray-300 mx-4 rounded-2xl py-3 justify-center flex-row items-center pl-4">
+            <View>
+              <MaterialCommunityIcons
+                name="seat-passenger"
+                size={20}
+                color="gray"
+              />
+            </View>
+
             <TextInput
               className="w-[85%] text-base px-4 font-semibold"
               placeholder="Seat"
@@ -275,6 +278,15 @@ export default function HomeScreen() {
                 }));
               }}
             />
+          </View>
+          {/* Search Button */}
+          <View className="w-full justify-start pt-2 px-4 mt-4">
+            <Pressable
+              className="bg-[#12B3A8] rounded-lg justify-center items-center py-4 "
+              onPress={() => {}}
+            >
+              <Text className="text-white font-bold text-lg">Search</Text>
+            </Pressable>
           </View>
         </View>
       </View>
