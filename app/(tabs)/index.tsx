@@ -1,4 +1,10 @@
-import { View, Text, ActivityIndicator, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  Pressable,
+  TextInput,
+} from "react-native";
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import Header from "@/components/Header";
@@ -6,14 +12,24 @@ import {
   ArrowPathRoundedSquareIcon,
   ChevronDoubleRightIcon,
 } from "react-native-heroicons/outline";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Search Flight Form
 interface SearchFlightData {
   originCity: string;
   destinationCity: string;
   departureDate: string;
-  seat: string;
+  seat: number | string;
+}
+
+// Flight Offer Data
+interface FlightOfferData {
+  originLocationCode: string;
+  destinationLocationCode: string;
+  departureDate: Date;
+  returnDate: Date;
+  adults: number;
+  maxResults: number;
 }
 
 // Trip Option Components
@@ -147,6 +163,14 @@ const DepartureDate = ({
 export default function HomeScreen() {
   const [isPending, setIsPending] = useState(false);
   const [pageNavigation, setPageNavigation] = useState("oneWay");
+  const [flightOffferData, setFlightOfferData] = useState<FlightOfferData>({
+    originLocationCode: "",
+    destinationLocationCode: "",
+    departureDate: new Date(),
+    returnDate: new Date(),
+    adults: 0,
+    maxResults: 10,
+  });
   const [searchFlightData, setSearchFlightData] = useState<SearchFlightData>({
     originCity: "",
     destinationCity: "",
@@ -221,6 +245,38 @@ export default function HomeScreen() {
           value={searchFlightData.departureDate.replace(/^"|"$|"/g, "")}
           onPress={() => {}}
         />
+
+        {/* Seat */}
+        <View className="border-2 border-gray-300 mx-4 rounded-2xl py-3 justify-center flex-row items-center pl-4">
+          <View>
+            <MaterialCommunityIcons
+              name="seat-passenger"
+              size={20}
+              color="gray"
+            />
+            <TextInput
+              className="w-[85%] text-base px-4 font-semibold"
+              placeholder="Seat"
+              keyboardType="numeric"
+              value={String(searchFlightData.seat)}
+              onChangeText={(text) => {
+                const seatValue = parseInt(text, 10);
+
+                const validSeatValue = isNaN(seatValue) ? 0 : seatValue;
+
+                setSearchFlightData((prev) => ({
+                  ...prev,
+                  seat: validSeatValue,
+                }));
+
+                setFlightOfferData((prev) => ({
+                  ...prev,
+                  adults: validSeatValue,
+                }));
+              }}
+            />
+          </View>
+        </View>
       </View>
     </View>
   );
