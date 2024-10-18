@@ -13,6 +13,7 @@ import {
   ChevronDoubleRightIcon,
 } from "react-native-heroicons/outline";
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 // Search Flight Form
 interface SearchFlightData {
@@ -222,7 +223,7 @@ export default function HomeScreen() {
               <FontAwesome5 size={20} color="gray" name="plane-departure" />
             }
             value={searchFlightData.originCity}
-            onPress={() => {}}
+            onPress={() => router.push("/departure")}
           />
           {/* Destination City */}
           <LocationInput
