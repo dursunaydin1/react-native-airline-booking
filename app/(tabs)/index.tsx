@@ -6,6 +6,15 @@ import {
   ArrowPathRoundedSquareIcon,
   ChevronDoubleRightIcon,
 } from "react-native-heroicons/outline";
+import { FontAwesome5 } from "@expo/vector-icons";
+
+// Search Flight Form
+interface SearchFlightData {
+  originCity: string;
+  destinationCity: string;
+  departureDate: string;
+  seat: string;
+}
 
 // Trip Option Components
 interface TripOptionProps {
@@ -73,10 +82,78 @@ const TripOption = ({
     </Pressable>
   </View>
 );
+// Location Components
+interface LocationInputProps {
+  placeholder: string;
+  icon: React.ReactNode;
+  value: string;
+  onPress: () => void;
+}
+
+const LocationInput = ({
+  placeholder,
+  icon,
+  value,
+  onPress,
+}: LocationInputProps) => (
+  <View className="border-2 border-gray-300 mx-4 mb-4 rounded-2xl justify-center">
+    <Pressable onPress={onPress}>
+      <View className="px-4 flex-row justify-between items-center">
+        <View className="w-[15%] border-r-2 border-gray-300">{icon}</View>
+
+        <View className="w-[80%] py-3">
+          {value ? (
+            <Text className="bg-transparent text-gray-600 font-bold">
+              {value}
+            </Text>
+          ) : (
+            <Text className="bg-transparent text-lg text-gray-600 font-semibold">
+              {placeholder}
+            </Text>
+          )}
+        </View>
+      </View>
+    </Pressable>
+  </View>
+);
+
+// Departure Date Components
+interface DepartureDateInputProps {
+  placeholder: string;
+  icon: React.ReactNode;
+  value: string;
+  onPress: () => void;
+}
+
+const DepartureDate = ({
+  placeholder,
+  icon,
+  value,
+  onPress,
+}: DepartureDateInputProps) => (
+  <Pressable
+    onPress={onPress}
+    className="border-2 border-gray-300 mx-4 mb-4 rounded-2xl justify-center py-4 flex-row items-center pl-4 "
+  >
+    <View className="w-[15%] borrder-r-2 border-gray-300">{icon}</View>
+    <View className="w-[85%] px-4 items-start justify-start">
+      <Text className="bg-transparent text-gray-600 font-bold">
+        {value || placeholder}
+      </Text>
+    </View>
+  </Pressable>
+);
 
 export default function HomeScreen() {
   const [isPending, setIsPending] = useState(false);
   const [pageNavigation, setPageNavigation] = useState("oneWay");
+  const [searchFlightData, setSearchFlightData] = useState<SearchFlightData>({
+    originCity: "",
+    destinationCity: "",
+    departureDate: "",
+    seat: "0",
+  });
+  const [selectedDate, setSelectedDate] = useState<any>(new Date());
 
   const handleNavigationChange = (type: string) => setPageNavigation(type);
   return (
@@ -110,6 +187,40 @@ export default function HomeScreen() {
             />
           </View>
         </View>
+
+        {/* Origin City */}
+        <LocationInput
+          placeholder={
+            searchFlightData.originCity
+              ? searchFlightData.originCity
+              : "Departure City"
+          }
+          icon={<FontAwesome5 size={20} color="gray" name="plane-departure" />}
+          value={searchFlightData.originCity}
+          onPress={() => {}}
+        />
+        {/* Destination City */}
+        <LocationInput
+          placeholder={
+            searchFlightData.originCity
+              ? searchFlightData.originCity
+              : "Destination City"
+          }
+          icon={<FontAwesome5 size={20} color="gray" name="plane-arrival" />}
+          value={searchFlightData.originCity}
+          onPress={() => {}}
+        />
+        {/* Departure Date */}
+        <DepartureDate
+          placeholder={
+            selectedDate && selectedDate.lenght > 0
+              ? selectedDate.replace(/^"|"$|"/g, "")
+              : "Departure Date"
+          }
+          icon={<FontAwesome5 size={20} color="gray" name="calendar-alt" />}
+          value={searchFlightData.departureDate.replace(/^"|"$|"/g, "")}
+          onPress={() => {}}
+        />
       </View>
     </View>
   );
