@@ -5,7 +5,7 @@ import {
   Pressable,
   TextInput,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import Header from "@/components/Header";
 import {
@@ -13,7 +13,8 @@ import {
   ChevronDoubleRightIcon,
 } from "react-native-heroicons/outline";
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Search Flight Form
 interface SearchFlightData {
@@ -24,7 +25,7 @@ interface SearchFlightData {
 }
 
 // Flight Offer Data
-interface FlightOfferData {
+export interface FlightOfferData {
   originLocationCode: string;
   destinationLocationCode: string;
   departureDate: Date;
@@ -163,6 +164,8 @@ const DepartureDate = ({
 
 export default function HomeScreen() {
   const [isPending, setIsPending] = useState(false);
+  const [refreshData, setRefreshData] = useState(false);
+  const [session, setSession] = useState<any>(null);
   const [pageNavigation, setPageNavigation] = useState("oneWay");
   const [flightOffferData, setFlightOfferData] = useState<FlightOfferData>({
     originLocationCode: "",
@@ -181,6 +184,82 @@ export default function HomeScreen() {
   const [selectedDate, setSelectedDate] = useState<any>(new Date());
 
   const handleNavigationChange = (type: string) => setPageNavigation(type);
+
+  useEffect(() => {
+    const loadSelectedDestination = async () => {
+      try {
+        const departureCities = await AsyncStorage.getItem("departureCities");
+        const destinationCities = await AsyncStorage.getItem(
+          "destinationCities"
+        );
+        const departureDate = await AsyncStorage.getItem("departureDate");
+
+        if (departureCities !== null) {
+          const departureCitiesArray = JSON.parse(departureCities);
+
+          const lastAddedItem =
+            departureCitiesArray[departureCitiesArray.length - 1];
+
+          setSearchFlightData((prev) => ({
+            ...prev,
+            originCity: lastAddedItem.city,
+          }));
+
+          setFlightOfferData((prev) => ({
+            ...prev,
+            originLocationCode: lastAddedItem.iataCode,
+          }));
+        }
+
+        if (destinationCities !== null) {
+          const destinationCitiesArray = JSON.parse(destinationCities);
+
+          const lastAddedItem =
+            destinationCitiesArray[destinationCitiesArray.length - 1];
+
+          setSearchFlightData((prev) => ({
+            ...prev,
+            destinationCity: lastAddedItem.city,
+          }));
+
+          setFlightOfferData((prev) => ({
+            ...prev,
+            destinationLocationCode: lastAddedItem.iataCode,
+          }));
+        }
+
+        if (departureDate !== null) {
+          setSelectedDate(departureDate);
+
+          setSearchFlightData((prev) => ({
+            ...prev,
+            departureDate: departureDate,
+          }));
+
+          // setFlightOfferData((prev) => ({
+          //   ...prev,
+          //   departureDate: departureDate,
+          // }));
+        }
+      } catch (error) {
+        console.log("Error loading previous selected cities", error);
+      }
+    };
+
+    loadSelectedDestination();
+
+    setRefreshData(false);
+  }, [refreshData]);
+
+  const handleBackFromPreviousScreen = () => {
+    setRefreshData(true);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      handleBackFromPreviousScreen();
+    }, [session])
+  );
   return (
     <View className="flex-1 items-center bg-[#F5F7FA] relative">
       <StatusBar style="light" />

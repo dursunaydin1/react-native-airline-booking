@@ -1,13 +1,92 @@
 import { View, Text, Pressable, TextInput, FlatList } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import axios from "axios";
+import { apiToken } from "../utils/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Departure() {
   const [searchInput, setSearchInput] = useState("");
-  const [autoCompleteResults, setAutoCompleteResults] = useState([]);
 
-  const handleInputChange = (text: string) => setSearchInput(text);
+  const [autoCompleteResults, setAutoCompleteResults] = useState<
+    { id: string; name: string; iataCode: string }[]
+  >([]);
+  const [flightOffferData, setFlightOfferData] = useState<{
+    originLocationCode: string;
+  }>({ originLocationCode: "" });
+  const [previousSelectedDeparture, setPreviousSelectedDeparture] = useState<
+    { city: string; iataCode: string }[]
+  >([]);
+
+  const loadPreviousSelectedCities = async () => {
+    try {
+      const cities = await AsyncStorage.getItem("departureCities");
+      if (cities !== null) {
+        setPreviousSelectedDeparture(JSON.parse(cities));
+      }
+    } catch (error) {
+      console.log("Error loading previous selected cities", error);
+    }
+  };
+
+  useEffect(() => {
+    loadPreviousSelectedCities();
+  }, []);
+
+  const debounce = (fn: any, delay: number) => {
+    let timeoutId;
+    return function (...args: any) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => fn.apply(this, args), delay);
+    };
+  };
+
+  const autoCompleteSearch = async (searchInput: string) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${apiToken}`,
+      };
+
+      const url = `https://test.api.amadeus.com/v1/reference-data/locations?subType=AIRPORT&keyword=${searchInput}`;
+
+      const response = await axios.get(url, { headers });
+      setAutoCompleteResults(response.data.data);
+    } catch (error) {
+      if (error.response && error.response.status === 429) {
+        console.log("Rate limit exceeded. Please wait and try again later.");
+      }
+    }
+  };
+
+  const debounceSearch = debounce(autoCompleteSearch, 5000);
+
+  const handleInputChange = (text: string) => {
+    setSearchInput(text);
+    debounceSearch(text);
+  };
+
+  const handleSelectAutoComplete = async (item: any) => {
+    const previousSelectedCities = [...previousSelectedDeparture];
+
+    previousSelectedCities.push({ city: item.name, iataCode: item.iataCode });
+
+    await AsyncStorage.setItem(
+      "departureCities",
+      JSON.stringify(previousSelectedCities)
+    );
+
+    setPreviousSelectedDeparture(previousSelectedCities);
+
+    setFlightOfferData({
+      ...flightOffferData,
+      originLocationCode: item.iataCode,
+    });
+
+    setSearchInput(`${item.name}, ${item.iataCode}`);
+    setAutoCompleteResults([]);
+  };
+
   return (
     <View className="flex-1 items-center bg-[#F5F7FA] relative">
       <View className="w-full h-full">
@@ -71,7 +150,7 @@ export default function Departure() {
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                   <Pressable
-                    onPress={() => {}}
+                    onPress={() => handleSelectAutoComplete(item)}
                     className="px-2 py-2 rounded-xl my-1"
                   >
                     <Text className="text-gray-500 capitalize">
@@ -82,6 +161,31 @@ export default function Departure() {
               />
             </View>
           )}
+
+          {/* Previous Selected Cities */}
+          <View className="px-4 w-full">
+            <Text className="text-gray-500 font-bold mt-4 text-lg">
+              Previous Selected
+            </Text>
+
+            {previousSelectedDeparture.map((city, index) => (
+              <Pressable
+                key={index}
+                onPress={() => {
+                  setFlightOfferData({
+                    ...flightOffferData,
+                    originLocationCode: city.iataCode,
+                  });
+                  setSearchInput(`${city.city}, ${city.iataCode}`);
+                }}
+                className="bg-white border-2 border-gray-400 rounded-xl px-2 py-3 my-2"
+              >
+                <Text className="text-gray-500 capitalize">
+                  {city.city} ({city.iataCode})
+                </Text>
+              </Pressable>
+            ))}
+          </View>
         </View>
       </View>
     </View>
