@@ -12,7 +12,7 @@ export default function Departure() {
   const [autoCompleteResults, setAutoCompleteResults] = useState<
     { id: string; name: string; iataCode: string }[]
   >([]);
-  const [flightOffferData, setFlightOfferData] = useState<{
+  const [flightOfferData, setFlightOfferData] = useState<{
     originLocationCode: string;
   }>({ originLocationCode: "" });
   const [previousSelectedDeparture, setPreviousSelectedDeparture] = useState<
@@ -79,7 +79,7 @@ export default function Departure() {
     setPreviousSelectedDeparture(previousSelectedCities);
 
     setFlightOfferData({
-      ...flightOffferData,
+      ...flightOfferData,
       originLocationCode: item.iataCode,
     });
 
@@ -173,7 +173,7 @@ export default function Departure() {
                 key={index}
                 onPress={() => {
                   setFlightOfferData({
-                    ...flightOffferData,
+                    ...flightOfferData,
                     originLocationCode: city.iataCode,
                   });
                   setSearchInput(`${city.city}, ${city.iataCode}`);

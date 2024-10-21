@@ -12,7 +12,7 @@ export default function Destination() {
   const [autoCompleteResults, setAutoCompleteResults] = useState<
     { id: string; name: string; iataCode: string }[]
   >([]);
-  const [flightOffferData, setFlightOfferData] = useState<{
+  const [flightOfferData, setFlightOfferData] = useState<{
     destinationLocationCode: string;
   }>({ destinationLocationCode: "" });
   const [previousSelectedDestination, setPreviousSelectedDestination] =
@@ -78,7 +78,7 @@ export default function Destination() {
     setPreviousSelectedDestination(previousSelectedCities);
 
     setFlightOfferData({
-      ...flightOffferData,
+      ...flightOfferData,
       destinationLocationCode: item.iataCode,
     });
 
@@ -172,7 +172,7 @@ export default function Destination() {
                 key={index}
                 onPress={() => {
                   setFlightOfferData({
-                    ...flightOffferData,
+                    ...flightOfferData,
                     destinationLocationCode: city.iataCode,
                   });
                   setSearchInput(`${city.city}, ${city.iataCode}`);

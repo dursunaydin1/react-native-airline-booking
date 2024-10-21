@@ -324,7 +324,7 @@ export default function HomeScreen() {
             }
             icon={<FontAwesome5 size={20} color="gray" name="calendar-alt" />}
             value={searchFlightData.departureDate.replace(/^"|"$|"/g, "")}
-            onPress={() => {}}
+            onPress={() => router.push("/departuredate")}
           />
 
           {/* Seat */}

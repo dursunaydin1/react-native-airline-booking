@@ -39,6 +39,7 @@ export default function RootLayout() {
         <Stack.Screen name="+not-found" />
         <Stack.Screen name="departure" />
         <Stack.Screen name="destination" />
+        <Stack.Screen name="departuredate" />
       </Stack>
     </ThemeProvider>
   );
