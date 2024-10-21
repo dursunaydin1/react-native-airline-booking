@@ -1,50 +1,76 @@
-# Welcome to your Expo app 👋
+# Flight Search App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Bu proje, kullanıcıların uçuş arama yapabilmesini sağlayan bir React Native uygulamasıdır. Uygulama, uçuş bilgilerini girmek ve sonuçları görüntülemek için kullanıcı dostu bir arayüz sunmaktadır.
 
-## Get started
+## İçindekiler
 
-1. Install dependencies
+- [Başlarken](#başlarken)
+- [Özellikler](#özellikler)
+- [Teknolojiler](#teknolojiler)
+- [Kurulum](#kurulum)
+- [Kullanım](#kullanım)
+- [Katkıda Bulunma](#katkıda-bulunma)
+- [Lisans](#lisans)
+
+## Başlarken
+
+Bu bölüm, projenizi yerel makinenizde çalıştırmak için gereken adımları içermektedir.
+
+### Gereksinimler
+
+- Node.js (en son sürüm önerilir)
+- Expo CLI (geliştirme için)
+
+## Özellikler
+
+- Uçuş bilgilerini girme (Kalkış Şehri, Varış Şehri, Kalkış Tarihi, Koltuk Sayısı)
+- Tek yön ve gidiş-dönüş uçuşları için arama
+- Kullanıcı dostu arayüz
+
+## Teknolojiler
+
+- **React Native**: Mobil uygulama geliştirme için
+- **Tailwind CSS**: Stil için
+- **Expo**: Geliştirme ve test süreci için
+- **TypeScript**: Tip güvenliği için
+
+## Kurulum
+
+1. Bu repository'yi klonlayın:
 
    ```bash
+   git clone https://github.com/kullanici_adiniz/flight-search-app.git
+   cd flight-search-app
+
+   ```
+
+2. Gerekli bağımlılıkları yükleyin:
+
    npm install
-   ```
 
-2. Start the app
+3. Uygulamayı başlatın:
 
-   ```bash
-    npx expo start
-   ```
+   expo start
 
-In the output, you'll find options to open the app in a
+## Kullanım
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Uygulamayı başlattıktan sonra, tarayıcınızda veya mobil cihazınızda uygulamaya erişebilirsiniz.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+1. Uçuş Bilgileri Girme:
+   Kalkış şehrinizi, varış şehrinizi, kalkış tarihinizi ve koltuk sayınızı ilgili alanlara girin.
 
-## Get a fresh project
+2. Uçuş Arama:
+   "Search" butonuna tıklayarak uçuşları arayın.
+   Sonuçlar, belirttiğiniz kriterlere göre listelenecektir.
 
-When you're ready, run:
+## Katkıda Bulunma
 
-```bash
-npm run reset-project
-```
+Katkıda bulunmak isterseniz, lütfen bu adımları takip edin:
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+1.  Bu repository'yi forkladığınızdan emin olun.
+2.  Yeni bir özellik ekleyin veya bir hata düzeltin.
+3.  Değişikliklerinizi bir pull request ile gönderin.
 
-## Learn more
+## Proje Arayüzü
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+<img src="./assets/image.png"/>
