@@ -4,6 +4,7 @@ import {
   ActivityIndicator,
   Pressable,
   TextInput,
+  Alert,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
@@ -15,6 +16,8 @@ import {
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { apiToken, baseUrl } from "@/utils/api";
+import axios from "axios";
 
 // Search Flight Form
 interface SearchFlightData {
@@ -172,14 +175,14 @@ export default function HomeScreen() {
     destinationLocationCode: "",
     departureDate: new Date(),
     returnDate: new Date(),
-    adults: 0,
+    adults: 1,
     maxResults: 10,
   });
   const [searchFlightData, setSearchFlightData] = useState<SearchFlightData>({
     originCity: "",
     destinationCity: "",
     departureDate: "",
-    seat: "0",
+    seat: 1,
   });
   const [selectedDate, setSelectedDate] = useState<any>(new Date());
 
@@ -236,10 +239,10 @@ export default function HomeScreen() {
             departureDate: departureDate,
           }));
 
-          // setFlightOfferData((prev) => ({
-          //   ...prev,
-          //   departureDate: departureDate,
-          // }));
+          setFlightOfferData((prev) => ({
+            ...prev,
+            departureDate: new Date(departureDate),
+          }));
         }
       } catch (error) {
         console.log("Error loading previous selected cities", error);
@@ -260,6 +263,69 @@ export default function HomeScreen() {
       handleBackFromPreviousScreen();
     }, [session])
   );
+
+  const constructSearchUrl = () => {
+    const {
+      originLocationCode,
+      destinationLocationCode,
+      departureDate,
+      adults,
+      maxResults,
+    } = flightOffferData;
+    const formattedDepartureDate = new Date(departureDate).toISOString();
+
+    if (
+      !originLocationCode ||
+      !destinationLocationCode ||
+      !departureDate ||
+      !adults
+    ) {
+      Alert.alert("Error", "Please fill all the required fields");
+    }
+    return `${baseUrl}?originLocationCode=${originLocationCode}&destinationLocationCode=${destinationLocationCode}&departureDate=${formattedDepartureDate}&adults=${adults}&max=${maxResults}`;
+  };
+
+  const handleParentSearch = async () => {
+    const searchUrl = constructSearchUrl();
+    setIsPending(true);
+
+    try {
+      const response = await axios.get(searchUrl, {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+        },
+      });
+      if (response.data) {
+        setIsPending(false);
+
+        await AsyncStorage.setItem(
+          "searchFlightData",
+          JSON.stringify(searchFlightData)
+        );
+        console.log("Flight Ticket Data", response.data);
+        router.push({
+          pathname: "/searchresult" as "/",
+          params: {
+            flightOffferData: JSON.stringify(response.data),
+          },
+        });
+      }
+    } catch (error: any) {
+      console.log("Error fetching flight offers", error);
+      setIsPending(true);
+
+      if (error.response && error.response.status === 401) {
+        Alert.alert(
+          "API Key Expired",
+          "Please get a new API Key from OpenFlights",
+          [{ text: "OK" }]
+        );
+      } else {
+        Alert.alert("Error", "An error occurred while fetching flight offers");
+      }
+    }
+  };
+
   return (
     <View className="flex-1 items-center bg-[#F5F7FA] relative">
       <StatusBar style="light" />
@@ -363,7 +429,7 @@ export default function HomeScreen() {
           <View className="w-full justify-start pt-2 px-4 mt-4">
             <Pressable
               className="bg-[#12B3A8] rounded-lg justify-center items-center py-4 "
-              onPress={() => {}}
+              onPress={() => handleParentSearch}
             >
               <Text className="text-white font-bold text-lg">Search</Text>
             </Pressable>
