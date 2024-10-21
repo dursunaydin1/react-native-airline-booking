@@ -46,11 +46,17 @@ Bu bölüm, projenizi yerel makinenizde çalıştırmak için gereken adımları
 
 2. Gerekli bağımlılıkları yükleyin:
 
+   ```bash
    npm install
+
+   ```
 
 3. Uygulamayı başlatın:
 
+   ```bash
    expo start
+
+   ```
 
 ## Kullanım
 
