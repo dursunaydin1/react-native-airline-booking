@@ -6,24 +6,23 @@ import axios from "axios";
 import { apiToken } from "../utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function Departure() {
+export default function Destination() {
   const [searchInput, setSearchInput] = useState("");
 
   const [autoCompleteResults, setAutoCompleteResults] = useState<
     { id: string; name: string; iataCode: string }[]
   >([]);
   const [flightOffferData, setFlightOfferData] = useState<{
-    originLocationCode: string;
-  }>({ originLocationCode: "" });
-  const [previousSelectedDeparture, setPreviousSelectedDeparture] = useState<
-    { city: string; iataCode: string }[]
-  >([]);
+    destinationLocationCode: string;
+  }>({ destinationLocationCode: "" });
+  const [previousSelectedDestination, setPreviousSelectedDestination] =
+    useState<{ city: string; iataCode: string }[]>([]);
 
   const loadPreviousSelectedCities = async () => {
     try {
-      const cities = await AsyncStorage.getItem("departureCities");
+      const cities = await AsyncStorage.getItem("destinationCities");
       if (cities !== null) {
-        setPreviousSelectedDeparture(JSON.parse(cities));
+        setPreviousSelectedDestination(JSON.parse(cities));
       }
     } catch (error) {
       console.log("Error loading previous selected cities", error);
@@ -67,20 +66,20 @@ export default function Departure() {
   };
 
   const handleSelectAutoComplete = async (item: any) => {
-    const previousSelectedCities = [...previousSelectedDeparture];
+    const previousSelectedCities = [...previousSelectedDestination];
 
     previousSelectedCities.push({ city: item.name, iataCode: item.iataCode });
 
     await AsyncStorage.setItem(
-      "departureCities",
+      "destinationCities",
       JSON.stringify(previousSelectedCities)
     );
 
-    setPreviousSelectedDeparture(previousSelectedCities);
+    setPreviousSelectedDestination(previousSelectedCities);
 
     setFlightOfferData({
       ...flightOffferData,
-      originLocationCode: item.iataCode,
+      destinationLocationCode: item.iataCode,
     });
 
     setSearchInput(`${item.name}, ${item.iataCode}`);
@@ -111,7 +110,7 @@ export default function Departure() {
               </Pressable>
               <View className="w-[60%] justify-center items-center flex-row">
                 <Text className="text-white  font-extrabold text-lg">
-                  Select Departure
+                  Select Destination
                 </Text>
               </View>
 
@@ -168,13 +167,13 @@ export default function Departure() {
               Previous Selected
             </Text>
 
-            {previousSelectedDeparture.map((city, index) => (
+            {previousSelectedDestination.map((city, index) => (
               <Pressable
                 key={index}
                 onPress={() => {
                   setFlightOfferData({
                     ...flightOffferData,
-                    originLocationCode: city.iataCode,
+                    destinationLocationCode: city.iataCode,
                   });
                   setSearchInput(`${city.city}, ${city.iataCode}`);
                 }}

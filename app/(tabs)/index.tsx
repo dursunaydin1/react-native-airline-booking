@@ -313,7 +313,7 @@ export default function HomeScreen() {
             }
             icon={<FontAwesome5 size={20} color="gray" name="plane-arrival" />}
             value={searchFlightData.destinationCity}
-            onPress={() => {}}
+            onPress={() => router.push("/destination")}
           />
           {/* Departure Date */}
           <DepartureDate
